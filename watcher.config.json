@@ -1,0 +1,22 @@
+{
+  "send": "sim",
+  "minProfit": "0.0002",
+  "notional": { "ARB": "0.005" },
+  "hotTxLimiter": {
+    "max": 1,
+    "persistent": true,
+    "statePath": ".state/hot_tx_counter.json"
+  },
+
+  "users": [],
+  "defaultPath": {
+    "tokens": [
+      "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+      "0xaf88d065e77c8cc2239327c5edb3a432268e5831"
+    ],
+    "fees": [500]
+  },
+  "pollSeconds": 15,
+  "aaveData": "",
+  "radiantData": ""
+}

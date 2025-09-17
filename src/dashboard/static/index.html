@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MEV EV Dashboard</title>
+    <style>
+      body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; margin: 20px; }
+      .row { display: flex; gap: 16px; flex-wrap: wrap; }
+      .card { padding: 16px; border: 1px solid #eee; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+      canvas { width: 100%; height: 320px; }
+      .kpi { font-size: 14px; }
+      .kpi strong { font-size: 18px; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <h2>MEV EV Dashboard</h2>
+    <div class="row">
+      <div class="card" style="flex:1; min-width: 300px;">
+        <div class="kpi">Total Trades: <strong id="k_trades">0</strong></div>
+        <div class="kpi">Hit Rate: <strong id="k_hitrate">0%</strong></div>
+        <div class="kpi">PNL (sum EV): <strong id="k_pnl">0.00 USDC</strong></div>
+      </div>
+      <div class="card" style="flex:3; min-width: 480px;">
+        <canvas id="c_ev"></canvas>
+      </div>
+    </div>
+
+    <script>
+      async function load() {
+        const res = await fetch('/metrics');
+        const data = await res.json();
+
+        const labels = data.map(d => new Date(d.ts).toLocaleTimeString());
+        const ev = data.map(d => d.evUSDC / 1e6);
+        const pnl = ev.reduce((a,b)=>a+b,0);
+        const trades = data.filter(d => d.executed).length;
+        const hits = data.filter(d => d.executed && d.success).length;
+        const hitRate = trades ? (100*hits/trades).toFixed(1) : "0.0";
+
+        document.getElementById('k_trades').textContent = String(trades);
+        document.getElementById('k_hitrate').textContent = hitRate + "%";
+        document.getElementById('k_pnl').textContent = pnl.toFixed(2) + " USDC";
+
+        const ctx = document.getElementById('c_ev').getContext('2d');
+        new Chart(ctx, {
+          type: 'line',
+          data: { labels, datasets: [{ label: 'EV (USDC)', data: ev }] },
+          options: { responsive: true, scales: { y: { beginAtZero: true } } }
+        });
+      }
+      load();
+      setInterval(load, 5000);
+    </script>
+  </body>
+</html>

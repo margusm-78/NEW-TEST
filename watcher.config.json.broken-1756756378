@@ -1,0 +1,10 @@
+{
+  "send": "sim",
+  "minProfit": "0.0002",
+  "notional": { "ARB": "0.005" },
+  "hotTxLimiter": {
+    "max": 1,
+    "persistent": true,
+    "statePath": ".state/hot_tx_counter.json"
+  }
+}

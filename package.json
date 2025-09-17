@@ -1,0 +1,31 @@
+{
+  "name": "arbi-mev-univ3-starter",
+  "version": "0.3.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "searcher": "ts-node src/searcher/index.ts",
+    "compile": "hardhat compile",
+    "deploy:arbitrum": "hardhat run scripts/deploy.ts --network arbitrum",
+    "dashboard": "ts-node src/dashboard/server.ts",
+    "watcher": "ts-node src/searcher/run_watcher.ts",
+    "bot:test": "ts-node --transpile-only scripts/test-profitable.ts test",
+    "bot:monitor": "ts-node --transpile-only scripts/test-profitable.ts monitor",
+    "bot:validate": "ts-node --transpile-only scripts/test-profitable.ts validate"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "ethers": "^6.13.2"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@types/json5": "^2.2.0",
+    "@types/node": "^24.3.0",
+    "hardhat": "^2.22.12",
+    "json5": "^2.2.3",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.4",
+    "typescript": "^5.4.5"
+  }
+}

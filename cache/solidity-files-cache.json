@@ -1,0 +1,42 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/home/mmahar/arbi-mev-univ3-starter/arbi-mev-univ3-starter-with-dash+watcher+runner/contracts/ArbiSearcherRouter.sol": {
+      "lastModificationDate": 1755637155693,
+      "contentHash": "b6859fcff40151f5ab158baed6f1a9cd",
+      "sourceName": "contracts/ArbiSearcherRouter.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 800
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "ArbiSearcherRouter",
+        "IERC20"
+      ]
+    }
+  }
+}
