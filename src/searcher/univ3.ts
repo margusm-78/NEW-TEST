@@ -46,15 +46,23 @@ async function feesWithLivePools(
 
   for (const fee of fees) {
     try {
-      const poolAddr: string = await RP.withProvider((p) =>
-        new ethers.Contract(factoryAddr, asInterfaceAbi(FactoryAbi) as InterfaceAbi, p).getPool(tokenA, tokenB, fee)
+      const poolAddr: string = await RP.withProvider(
+        (p) =>
+          new ethers.Contract(factoryAddr, asInterfaceAbi(FactoryAbi) as InterfaceAbi, p).getPool(tokenA, tokenB, fee),
+        { method: "eth_call", cacheable: true, ttlSeconds: 3600 }
       );
 
       if (!poolAddr || poolAddr === ethers.ZeroAddress) continue;
 
       const [slot0, liq] = await Promise.all([
-        RP.withProvider((p) => new ethers.Contract(poolAddr, asInterfaceAbi(PoolAbi) as InterfaceAbi, p).slot0()),
-        RP.withProvider((p) => new ethers.Contract(poolAddr, asInterfaceAbi(PoolAbi) as InterfaceAbi, p).liquidity()),
+        RP.withProvider(
+          (p) => new ethers.Contract(poolAddr, asInterfaceAbi(PoolAbi) as InterfaceAbi, p).slot0(),
+          { method: "eth_call" }
+        ),
+        RP.withProvider(
+          (p) => new ethers.Contract(poolAddr, asInterfaceAbi(PoolAbi) as InterfaceAbi, p).liquidity(),
+          { method: "eth_call" }
+        ),
       ]);
 
       const sqrt = slot0 ? (slot0[0] as bigint) : 0n;
@@ -80,10 +88,12 @@ export async function quoteExactInputSingle(
   let lastErr: any = null;
 
   try {
-    const quoted = await RP.withProvider((p) =>
-      new ethers.Contract(quoter, asInterfaceAbi(QuoterV2Abi) as InterfaceAbi, p)
-        .quoteExactInputSingle
-        .staticCall({ tokenIn, tokenOut, fee, amountIn, sqrtPriceLimitX96: 0 })
+    const quoted = await RP.withProvider(
+      (p) =>
+        new ethers.Contract(quoter, asInterfaceAbi(QuoterV2Abi) as InterfaceAbi, p)
+          .quoteExactInputSingle
+          .staticCall({ tokenIn, tokenOut, fee, amountIn, sqrtPriceLimitX96: 0 }),
+      { method: "eth_call" }
     );
     const amountOut = (quoted as any)?.amountOut ?? (quoted as bigint);
     return amountOut as bigint;

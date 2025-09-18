@@ -54,8 +54,8 @@ async function main() {
   const arbAddr         = requireAddress("CONFIG.tokens.ARB",    CONFIG.tokens.ARB);
   const wethAddr        = requireAddress("CONFIG.tokens.WETH",   CONFIG.tokens.WETH);
 
-  const net = await RP.withProvider((p) => p.getNetwork());
-  const code = await RP.withProvider((p) => p.getCode(routerAddr));
+  const net = await RP.withProvider((p) => p.getNetwork(), { method: "eth_chainId", cacheable: true, ttlSeconds: 300 });
+  const code = await RP.withProvider((p) => p.getCode(routerAddr), { method: "eth_getCode" });
   if (code === "0x") throw new Error(`No contract code at ROUTER_ADDRESS: ${routerAddr}`);
 
   console.log("Searcher wallet:", await wallet.getAddress());
@@ -203,7 +203,7 @@ async function main() {
       const tx     = await wallet.populateTransaction({ to: routerAddr, data: txData, value: 0n });
 
       const signed = await wallet.signTransaction(tx);
-      const resp   = await RP.withProvider((p) => p.send("eth_sendRawTransaction", [signed]));
+      const resp   = await RP.withProvider((p) => p.send("eth_sendRawTransaction", [signed]), { method: "eth_sendRawTransaction", allowNearLimit: true });
       console.log("Sent:", resp);
     } catch (e: any) {
       console.error("loop", e?.shortMessage || e?.message || e);

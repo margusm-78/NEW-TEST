@@ -11,9 +11,12 @@ export async function sendWithTimeboostStub(
   signedTx: string,
   _bidWei: bigint
 ): Promise<string> {
-  const hash = await RP.withProvider(async (p) => {
-    const h = (await p.send("eth_sendRawTransaction", [signedTx])) as string;
-    return h;
-  });
+  const hash = await RP.withProvider(
+    async (p) => {
+      const h = (await p.send("eth_sendRawTransaction", [signedTx])) as string;
+      return h;
+    },
+    { method: "eth_sendRawTransaction", allowNearLimit: true }
+  );
   return String(hash);
 }
