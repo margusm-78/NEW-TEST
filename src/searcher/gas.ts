@@ -25,17 +25,19 @@ export async function estimateGasARB(
   feeForWethToArb: number // fee tier used to convert gas (WETH->ARB)
 ): Promise<GasQuote> {
   // 1) Estimate limit with provider rotation
-  const gasLimit = await RP.withProvider((p) =>
-    p.estimateGas({
-      to: tx.to,
-      data: tx.data,
-      value: tx.value ?? 0n,
-      ...(tx.from ? { from: tx.from } : {}),
-    })
+  const gasLimit = await RP.withProvider(
+    (p) =>
+      p.estimateGas({
+        to: tx.to,
+        data: tx.data,
+        value: tx.value ?? 0n,
+        ...(tx.from ? { from: tx.from } : {}),
+      }),
+    { method: "eth_estimateGas" }
   );
 
   // 2) Gas price (prefer maxFeePerGas; fallback gasPrice)
-  const feeData = await RP.withProvider((p) => p.getFeeData());
+  const feeData = await RP.withProvider((p) => p.getFeeData(), { method: "eth_feeHistory", cacheable: true, ttlSeconds: 20 });
   const gasPriceWei =
     (feeData.maxFeePerGas ?? feeData.gasPrice ?? 1_000_000_000n); // 1 gwei fallback on weird nodes
   const gasWei = gasLimit * gasPriceWei;

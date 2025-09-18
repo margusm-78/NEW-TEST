@@ -96,7 +96,7 @@ async function quoteSingleOrPath(
         throw new Error(`quoter revert: single='${m1}', path='${m2}'`);
       }
     }
-  });
+  }, { method: "eth_call" });
 }
 
 export type FallbackQuote = {

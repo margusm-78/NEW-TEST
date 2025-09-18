@@ -11,8 +11,18 @@
     "forceConsistentCasingInFileNames": true,
     "rootDir": ".",
     "outDir": "dist",
-    "types": ["node"]
+    "types": [
+      "node"
+    ]
   },
-  "include": ["src/**/*.ts", "scripts/**/*.ts"],
-  "exclude": ["dist", "node_modules"]
+  "include": [
+    "src/**/*.ts",
+    "scripts/**/*.ts"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules",
+    "src/searcher/test-profitable.ts",
+    "src/searcher/profitable.ts"
+  ]
 }

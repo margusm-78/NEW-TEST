@@ -99,8 +99,9 @@ export async function quoteExactInputBestFee(
   let lastErr: unknown = null;
   for (const [i, fee] of feesToTry().entries()) {
     try {
-      const amountOut = await RP.withProvider((p) =>
-        staticQuote(p, { tokenIn, tokenOut, fee, amountIn })
+      const amountOut = await RP.withProvider(
+        (p) => staticQuote(p, { tokenIn, tokenOut, fee, amountIn }),
+        { method: "eth_call" }
       );
       return { amountOut, feeUsed: fee };
     } catch (e) {
